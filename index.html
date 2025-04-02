@@ -1,34 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Мой магазин</title>
+    <title>Burger Shop</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial; padding: 20px; }
-        .item { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; }
-        button { background: orange; color: white; border: none; padding: 10px; }
-        #cart { margin-top: 20px; padding: 15px; background: #f5f5f5; }
+        :root {
+            --primary: #FF6B00;
+            --dark: #1A1A1A;
+            --light: #F5F5F5;
+            --white: #FFFFFF;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+        }
+        
+        .menu-item {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .menu-item h3 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .price {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .add-btn:hover {
+            background: #E05B00;
+        }
+        
+        #cart {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        #cart h2 {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        #cart-items {
+            margin: 15px 0;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        #total {
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
-    <h1>🍔 Меню</h1>
+    <header>
+        <h1>🍔 Burger Palace</h1>
+        <p>Лучшие бургеры в городе</p>
+    </header>
     
-    <div class="item">
-        <h3>Бургер</h3>
-        <p>Цена: 5$</p>
-        <button onclick="addToCart('Бургер', 5)">Добавить</button>
-    </div>
-    
-    <div class="item">
-        <h3>Картошка</h3>
-        <p>Цена: 3$</p>
-        <button onclick="addToCart('Картошка', 3)">Добавить</button>
+    <div class="menu">
+        <div class="menu-item">
+            <h3>🔥 Spicy Burger</h3>
+            <p>Острый бургер с соусом чили и хрустящими овощами</p>
+            <div class="price">$5.99</div>
+            <button class="add-btn" onclick="addToCart('Spicy Burger', 5.99)">Добавить в корзину</button>
+        </div>
+        
+        <div class="menu-item">
+            <h3>🧀 Cheese Burger</h3>
+            <p>Классический бургер с двойной порцией сыра</p>
+            <div class="price">$4.99</div>
+            <button class="add-btn" onclick="addToCart('Cheese Burger', 4.99)">Добавить в корзину</button>
+        </div>
+        
+        <div class="menu-item">
+            <h3>🍟 French Fries</h3>
+            <p>Хрустящая картошка с фирменным соусом</p>
+            <div class="price">$2.99</div>
+            <button class="add-btn" onclick="addToCart('French Fries', 2.99)">Добавить в корзину</button>
+        </div>
     </div>
     
     <div id="cart">
-        <h2>Корзина</h2>
+        <h2>🛒 Ваш заказ</h2>
         <div id="cart-items"></div>
-        <p>Итого: <span id="total">0</span>$</p>
+        <p>Итого: <span id="total">0.00</span>$</p>
     </div>
 
     <script>
@@ -37,7 +145,15 @@
     function addToCart(name, price) {
         cart.push({name, price});
         updateCart();
-        alert(name + " добавлен!"); // Простое уведомление
+        
+        // Анимация добавления
+        const btn = event.target;
+        btn.innerHTML = '✓ Добавлено';
+        btn.style.background = '#4CAF50';
+        setTimeout(() => {
+            btn.innerHTML = 'Добавить в корзину';
+            btn.style.background = '#FF6B00';
+        }, 1000);
     }
     
     function updateCart() {
@@ -47,13 +163,22 @@
         
         cartEl.innerHTML = '';
         cart.forEach(item => {
-            const div = document.createElement('div');
-            div.textContent = item.name + ' - ' + item.price + '$';
-            cartEl.appendChild(div);
+            const itemEl = document.createElement('div');
+            itemEl.className = 'cart-item';
+            itemEl.innerHTML = `
+                <span>${item.name}</span>
+                <span>$${item.price.toFixed(2)}</span>
+            `;
+            cartEl.appendChild(itemEl);
             total += item.price;
         });
         
-        totalEl.textContent = total;
+        totalEl.textContent = total.toFixed(2);
+        
+        // Для Telegram WebApp
+        if (window.Telegram?.WebApp) {
+            window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        }
     }
     </script>
 </body>
